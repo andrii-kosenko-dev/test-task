@@ -1,59 +1,16 @@
-# Frontend
+# Product Search (frontend)
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 22.2.2.
+Angular SPA with real-time search, typeahead suggestions, a virtualized card list loaded in batches, and a product detail dialog. Dark theme by default with a light-theme toggle; mobile-first and responsive.
 
-## Development server
-
-To start a local development server, run:
+Data currently comes from a hardcoded DummyJSON fixture behind the `ProductsApi` interface, so a backend can be dropped in later.
 
 ```bash
-ng serve
+npm install
+npm start               # http://localhost:4200
+npm test                # unit + integration tests (Vitest)
+npm run test:coverage   # with coverage thresholds
+npm run lint
+npm run build
 ```
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
-
-## Code scaffolding
-
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+See the repository root for [AGENTS.md](../AGENTS.md) and [docs/](../docs): architecture, testing strategy and conventions.
