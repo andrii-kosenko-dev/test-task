@@ -117,7 +117,16 @@ src/app/
 - Tests: the column count follows the viewport breakpoint (mocked `BreakpointObserver`), and the dialog is full-screen on mobile.
 - A production build, lint and the whole test suite green.
 
-## Open questions
-1. Should the query history persist across reloads (localStorage), or live only in memory for the session?
-2. Is a minimum of 2 characters before searching and recording acceptable, or should it search from the first character?
-3. Should the five reference repos be skimmed before implementation to align on conventions?
+## Status
+
+T0–T13 are implemented. The open questions were never answered, so these defaults were used; change them if needed.
+
+1. **History persistence:** in memory only (not persisted across reloads).
+2. **Minimum query length:** a query is searched from the first character, but only queries of 2 or more characters that return results are remembered.
+3. **Reference repos:** not consulted.
+
+Other deviations from the plan:
+- `ThemeService`, the header and the Material theme were built together in T7.
+- The fixture holds 194 products (the full DummyJSON catalogue) and is lazy-loaded as its own chunk.
+- The initial bundle budget warning is 750 kB because Angular, Material, CDK and NgRx alone come to about 660 kB raw (150 kB transferred).
+- The UI was checked in headless Chromium at desktop and mobile widths; see `docs/TESTING.md` for what jsdom cannot cover.
