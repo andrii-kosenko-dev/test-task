@@ -1,0 +1,60 @@
+<div class="bar">
+  <h2 mat-dialog-title>{{ product.title }}</h2>
+  <button mat-icon-button type="button" class="close" aria-label="Close" (click)="close()">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="m6.4 5 5.6 5.6L17.6 5 19 6.4 13.4 12l5.6 5.6-1.4 1.4-5.6-5.6L6.4 19 5 17.6l5.6-5.6L5 6.4 6.4 5Z"
+      />
+    </svg>
+  </button>
+</div>
+
+<mat-dialog-content>
+  <div class="layout">
+    <div class="visual">
+      <div class="stage">
+        @if (imageFailed()) {
+          <span class="placeholder" aria-hidden="true">
+            <svg viewBox="0 0 24 24">
+              <path
+                d="M21 5v14H3V5h18Zm-2 2H5v6.2l3-3 4 4 3-3 4 4V7ZM5 17h14l-4-4-3 3-4-4-3 3v2Zm11-8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"
+              />
+            </svg>
+          </span>
+        } @else {
+          <img
+            class="hero"
+            [src]="current()"
+            [alt]="product.title"
+            (error)="imageFailed.set(true)"
+          />
+        }
+      </div>
+
+      @if (images.length > 1) {
+        <div class="gallery" role="group" aria-label="Product images">
+          @for (src of images; track src; let i = $index) {
+            <button
+              type="button"
+              [attr.aria-label]="'Show image ' + (i + 1) + ' of ' + images.length"
+              [attr.aria-current]="i === selectedIndex()"
+              [class.active]="i === selectedIndex()"
+              (click)="select(i)"
+            >
+              <img [src]="src" alt="" loading="lazy" />
+            </button>
+          }
+        </div>
+      }
+    </div>
+
+    <div class="info">
+      <span class="category">{{ product.category }}</span>
+      @if (product.brand) {
+        <span class="brand">by {{ product.brand }}</span>
+      }
+      <p class="price">{{ product.price | currency: 'USD' }}</p>
+      <p class="description">{{ product.description }}</p>
+    </div>
+  </div>
+</mat-dialog-content>

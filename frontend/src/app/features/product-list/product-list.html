@@ -1,0 +1,57 @@
+<p class="summary" role="status" aria-live="polite">{{ summary() }}</p>
+
+@if (error(); as message) {
+  <div class="error" role="alert">
+    <span>Something went wrong: {{ message }}</span>
+    <button mat-stroked-button type="button" (click)="retry()">Retry</button>
+  </div>
+}
+
+@if (showSkeleton()) {
+  <div class="grid" [style.--cols]="columns()" aria-hidden="true">
+    @for (n of skeletons; track n) {
+      <div class="skeleton"></div>
+    }
+  </div>
+} @else if (isEmpty()) {
+  <div class="empty">
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.3 4.3-1.4 1.4-4.3-4.3A7.5 7.5 0 1 1 10.5 3Zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Z"
+      />
+    </svg>
+    @if (query()) {
+      <p>No products match “{{ query() }}”.</p>
+      <p class="hint">Try a shorter or different word.</p>
+    } @else {
+      <p>No products available.</p>
+    }
+  </div>
+} @else if (items().length) {
+  <cdk-virtual-scroll-viewport
+    scrollWindow
+    [itemSize]="rowHeight"
+    [minBufferPx]="rowHeight * 2"
+    [maxBufferPx]="rowHeight * 4"
+    (scrolledIndexChange)="onScrolled()"
+    (renderedRangeChange)="onScrolled()"
+  >
+    <div
+      *cdkVirtualFor="let row of rows(); trackBy: trackRow"
+      class="row"
+      [style.--cols]="columns()"
+    >
+      @for (product of row; track product.id) {
+        <app-product-card [product]="product" (selected)="open($event)" />
+      }
+    </div>
+  </cdk-virtual-scroll-viewport>
+
+  @if (loading()) {
+    <div class="loading-more">
+      <mat-progress-spinner mode="indeterminate" diameter="24" aria-label="Loading more products" />
+    </div>
+  } @else if (!hasMore()) {
+    <p class="end">You’ve reached the end of the results.</p>
+  }
+}

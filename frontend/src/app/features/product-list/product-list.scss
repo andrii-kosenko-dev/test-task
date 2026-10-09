@@ -1,0 +1,101 @@
+:host {
+  display: block;
+}
+
+.summary {
+  margin: 0.5rem 0 1rem;
+  min-height: 1.5rem;
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+.row,
+.grid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 1), minmax(0, 1fr));
+  gap: 1rem;
+}
+
+// Fixed height is what lets the virtual scroller work with a constant item size.
+.row {
+  height: 336px;
+  margin-bottom: 1rem;
+}
+
+.skeleton {
+  height: 336px;
+  border-radius: var(--mat-sys-corner-large);
+  background: linear-gradient(
+    100deg,
+    var(--mat-sys-surface-container) 30%,
+    var(--mat-sys-surface-container-high) 50%,
+    var(--mat-sys-surface-container) 70%
+  );
+  background-size: 200% 100%;
+  animation: shimmer 1.4s linear infinite;
+}
+
+@keyframes shimmer {
+  to {
+    background-position: -200% 0;
+  }
+}
+
+.empty {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  padding: 4rem 1rem;
+  text-align: center;
+
+  svg {
+    width: 3rem;
+    height: 3rem;
+    fill: var(--mat-sys-on-surface-variant);
+    opacity: 0.6;
+  }
+
+  p {
+    margin: 0;
+    font: var(--mat-sys-title-medium);
+  }
+
+  .hint {
+    font: var(--mat-sys-body-medium);
+    color: var(--mat-sys-on-surface-variant);
+  }
+}
+
+.error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  margin-bottom: 1rem;
+  padding: 0.75rem 1rem;
+  color: var(--mat-sys-on-error-container);
+  background: var(--mat-sys-error-container);
+  border-radius: var(--mat-sys-corner-medium);
+}
+
+.loading-more {
+  display: flex;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.end {
+  margin: 0;
+  padding: 1rem;
+  text-align: center;
+  font: var(--mat-sys-body-medium);
+  color: var(--mat-sys-on-surface-variant);
+}
+
+@media (min-width: 37.5rem) {
+  .row,
+  .grid {
+    gap: 1.25rem;
+  }
+}

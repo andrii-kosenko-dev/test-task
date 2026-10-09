@@ -1,0 +1,29 @@
+<button type="button" class="card" aria-haspopup="dialog" (click)="selected.emit(product())">
+  <span class="media">
+    @if (imageFailed()) {
+      <span class="placeholder" aria-hidden="true">
+        <svg viewBox="0 0 24 24">
+          <path
+            d="M21 5v14H3V5h18Zm-2 2H5v6.2l3-3 4 4 3-3 4 4V7ZM5 17h14l-4-4-3 3-4-4-3 3v2Zm11-8.5a1.5 1.5 0 1 1 0 3 1.5 1.5 0 0 1 0-3Z"
+          />
+        </svg>
+      </span>
+    } @else {
+      <img
+        [src]="product().thumbnail"
+        alt=""
+        width="320"
+        height="240"
+        loading="lazy"
+        decoding="async"
+        (error)="imageFailed.set(true)"
+      />
+    }
+  </span>
+  <span class="body">
+    <span class="category">{{ product().category }}</span>
+    <span class="title">{{ product().title }}</span>
+    <span class="description">{{ product().description }}</span>
+    <span class="price">{{ product().price | currency: 'USD' }}</span>
+  </span>
+</button>
