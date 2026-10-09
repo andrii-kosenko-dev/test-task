@@ -1,0 +1,63 @@
+:host {
+  display: block;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  background: color-mix(in srgb, var(--mat-sys-surface) 85%, transparent);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid var(--mat-sys-outline-variant);
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 0.5rem 1rem;
+  min-height: 3.5rem;
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.625rem;
+  min-width: 0;
+}
+
+h1 {
+  margin: 0;
+  font: var(--mat-sys-title-large);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+
+.logo,
+.icon {
+  fill: currentColor;
+}
+
+.logo {
+  width: 1.5rem;
+  height: 1.5rem;
+  color: var(--mat-sys-primary);
+}
+
+.icon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.theme-toggle {
+  flex: none;
+  // WCAG-friendly touch target on mobile
+  min-width: 2.75rem;
+  min-height: 2.75rem;
+}
+
+@media (min-width: 48rem) {
+  header {
+    padding-inline: 1.5rem;
+  }
+}

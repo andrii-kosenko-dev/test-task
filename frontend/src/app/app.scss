@@ -1,0 +1,11 @@
+main {
+  max-width: 80rem;
+  margin: 0 auto;
+  padding: 1rem;
+}
+
+@media (min-width: 48rem) {
+  main {
+    padding: 1.5rem;
+  }
+}

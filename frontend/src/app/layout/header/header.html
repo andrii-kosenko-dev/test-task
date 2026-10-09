@@ -1,0 +1,32 @@
+<header>
+  <span class="brand">
+    <svg class="logo" viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M10.5 3a7.5 7.5 0 0 1 5.9 12.1l4.3 4.3-1.4 1.4-4.3-4.3A7.5 7.5 0 1 1 10.5 3Zm0 2a5.5 5.5 0 1 0 0 11 5.5 5.5 0 0 0 0-11Z"
+      />
+    </svg>
+    <h1>Product Search</h1>
+  </span>
+
+  <button
+    mat-icon-button
+    type="button"
+    class="theme-toggle"
+    [attr.aria-label]="label()"
+    [attr.aria-pressed]="isDark()"
+    [title]="label()"
+    (click)="toggle()"
+  >
+    @if (isDark()) {
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="icon">
+        <path
+          d="M12 7a5 5 0 1 0 0 10 5 5 0 0 0 0-10Zm0-5h-1v3h2V2h-1Zm0 17h-1v3h2v-3h-1ZM4.2 5.6l-.7.7 2.1 2.1 1.4-1.4-2.1-2.1-.7.7Zm12.2 12.2-1.4 1.4 2.1 2.1.7-.7.7-.7-2.1-2.1ZM2 11v2h3v-2H2Zm17 0v2h3v-2h-3ZM5.6 19.8l.7.7 2.1-2.1-1.4-1.4-2.1 2.1.7.7Zm12.2-12.2 1.4-1.4-.7-.7-.7-.7-2.1 2.1 1.4 1.4Z"
+        />
+      </svg>
+    } @else {
+      <svg viewBox="0 0 24 24" aria-hidden="true" class="icon">
+        <path d="M12.3 3a9 9 0 1 0 8.7 11.7A7 7 0 0 1 12.3 3Z" />
+      </svg>
+    }
+  </button>
+</header>
