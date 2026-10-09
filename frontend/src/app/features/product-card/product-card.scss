@@ -89,7 +89,6 @@
 }
 
 .description {
-  flex: 1;
   font: var(--mat-sys-body-small);
   color: var(--mat-sys-on-surface-variant);
   display: -webkit-box;
@@ -100,6 +99,7 @@
 }
 
 .price {
+  margin-top: auto;
   font: var(--mat-sys-title-medium);
   font-weight: 600;
 }
