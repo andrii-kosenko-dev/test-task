@@ -1,6 +1,6 @@
 import { TestBed } from '@angular/core/testing';
 import { provideMockActions } from '@ngrx/effects/testing';
-import { MockStore, provideMockStore } from '@ngrx/store/testing';
+import { provideMockStore } from '@ngrx/store/testing';
 import { Observable, Subject, of, throwError } from 'rxjs';
 import { ProductsApi } from '../../core/api/products-api';
 import type { Product } from '../../core/models/product.model';
@@ -21,7 +21,6 @@ const p = (id: number): Product => ({
 describe('ProductsEffects', () => {
   let actions$: Subject<unknown>;
   let effects: ProductsEffects;
-  let store: MockStore;
   let search: ReturnType<typeof vi.fn>;
 
   const setup = (state: ProductsState = initialProductsState) => {
@@ -36,7 +35,6 @@ describe('ProductsEffects', () => {
       ],
     });
     effects = TestBed.inject(ProductsEffects);
-    store = TestBed.inject(MockStore);
   };
 
   const collect = <T>(source$: Observable<T>): T[] => {
