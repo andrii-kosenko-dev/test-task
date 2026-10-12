@@ -2,5 +2,5 @@ node_modules
 dist
 coverage
 data
-report-service
 .env
+report-service/bin
