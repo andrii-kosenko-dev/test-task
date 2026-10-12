@@ -1,9 +1,10 @@
+import { provideHttpClient } from '@angular/common/http';
 import { ApplicationConfig, isDevMode, provideBrowserGlobalErrorListeners } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideEffects } from '@ngrx/effects';
 import { provideState, provideStore } from '@ngrx/store';
 import { provideStoreDevtools } from '@ngrx/store-devtools';
-import { FixtureProductsApi } from './core/api/fixture-products-api';
+import { HttpProductsApi } from './core/api/http-products-api';
 import { ProductsApi } from './core/api/products-api';
 import { routes } from './app.routes';
 import { DrawingsEffects } from './store/drawings/drawings.effects';
@@ -24,8 +25,8 @@ export const appConfig: ApplicationConfig = {
     provideState(drawingsFeature),
     provideEffects(ProductsEffects, QueriesEffects, DrawingsEffects),
     provideStoreDevtools({ maxAge: 25, logOnly: !isDevMode() }),
-    // Swap for the real HTTP implementation once the backend exists.
-    { provide: ProductsApi, useClass: FixtureProductsApi },
+    provideHttpClient(),
+    { provide: ProductsApi, useClass: HttpProductsApi },
     { provide: DrawingsStorage, useClass: LocalStorageDrawings },
   ],
 };

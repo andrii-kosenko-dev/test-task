@@ -1,5 +1,11 @@
 name: catalog
 
+x-node-service: &node-service
+  restart: unless-stopped
+  depends_on:
+    mongo: { condition: service_healthy }
+    redis: { condition: service_healthy }
+
 services:
   mongo:
     image: mongo:7
@@ -24,6 +30,59 @@ services:
       timeout: 5s
       retries: 20
 
+  report-service:
+    build: { context: ./backend, dockerfile: report-service/Dockerfile }
+    restart: unless-stopped
+    ports: ["50051:50051"]
+
+  ingest-service:
+    <<: *node-service
+    build: { context: ./backend, args: { APP: ingest-service } }
+    environment:
+      PORT: "3001"
+      MONGO_URI: mongodb://mongo:27017
+      MONGO_DB: catalog
+      REDIS_URL: redis://redis:6379
+      EXPORT_DIR: /data/exports
+      SEED_ON_START: "true"
+    ports: ["3001:3001"]
+    volumes: [exports:/data/exports]
+    user: root # the named volume is created root-owned
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  analytics-service:
+    <<: *node-service
+    build: { context: ./backend, args: { APP: analytics-service } }
+    depends_on:
+      mongo: { condition: service_healthy }
+      redis: { condition: service_healthy }
+      report-service: { condition: service_started }
+    environment:
+      PORT: "3002"
+      MONGO_URI: mongodb://mongo:27017
+      MONGO_DB: analytics
+      REDIS_URL: redis://redis:6379
+      REPORT_GRPC_URL: report-service:50051
+      REPORT_PROTO_PATH: /app/proto/report.proto
+    ports: ["3002:3002"]
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3002/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  frontend:
+    build: { context: ./frontend }
+    restart: unless-stopped
+    depends_on:
+      ingest-service: { condition: service_healthy }
+    ports: ["8080:80"]
+
 volumes:
   mongo-data:
   redis-data:
+  exports:

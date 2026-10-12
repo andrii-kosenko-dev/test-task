@@ -2,7 +2,8 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { firstValueFrom } from 'rxjs';
-import { PRODUCTS_API_LATENCY_MS } from './core/api/fixture-products-api';
+import { FixtureProductsApi, PRODUCTS_API_LATENCY_MS } from './core/api/fixture-products-api';
+import { ProductsApi } from './core/api/products-api';
 import { App } from './app';
 import { appConfig } from './app.config';
 import { SEARCH_DEBOUNCE_MS } from './store/products/products.effects';
@@ -10,8 +11,8 @@ import { DRAWINGS_STORAGE_KEY } from './store/drawings/drawings.storage';
 import { queriesFeature } from './store/queries/queries.reducer';
 
 /**
- * Functional / regression suite: the real store, effects, fixture API and components
- * wired together exactly as in production (only latency is zeroed).
+ * Functional / regression suite: the real store, effects and components wired together
+ * as in production, with the in-memory fixture API standing in for the backend (latency zeroed).
  */
 describe('App (integration)', () => {
   let fixture: ComponentFixture<App>;
@@ -40,7 +41,12 @@ describe('App (integration)', () => {
     document.documentElement.className = '';
     TestBed.configureTestingModule({
       imports: [App],
-      providers: [...appConfig.providers, { provide: PRODUCTS_API_LATENCY_MS, useValue: 0 }],
+      providers: [
+        ...appConfig.providers,
+        // The app talks HTTP in production; the suite swaps in the in-memory fixture so it needs no backend.
+        { provide: ProductsApi, useClass: FixtureProductsApi },
+        { provide: PRODUCTS_API_LATENCY_MS, useValue: 0 },
+      ],
     });
     store = TestBed.inject(Store);
     fixture = TestBed.createComponent(App);
