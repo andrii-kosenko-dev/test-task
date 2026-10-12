@@ -1,0 +1,37 @@
+:host {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  pointer-events: none;
+}
+
+canvas {
+  // Probed by the component so the canvas can paint with theme colors it cannot read from CSS.
+  color: var(--mat-sys-primary);
+  border: 0 solid var(--mat-sys-on-primary);
+  touch-action: none;
+  pointer-events: auto;
+  -webkit-tap-highlight-color: transparent;
+
+  &:focus-visible {
+    outline: 2px solid var(--mat-sys-primary);
+    outline-offset: -2px;
+  }
+}
+
+.tools {
+  position: absolute;
+  inset-inline-end: 0.5rem;
+  bottom: 0.5rem;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: flex-end;
+  gap: 0.5rem;
+  pointer-events: auto;
+
+  button {
+    min-height: 2.75rem;
+    background: var(--mat-sys-surface-container-highest);
+  }
+}

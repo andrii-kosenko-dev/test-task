@@ -1,0 +1,22 @@
+<canvas
+  #canvas
+  tabindex="0"
+  aria-label="Image annotations. Drag to draw a polygon, drag a polygon to move it, drag its round handle to rotate it. Enter selects the next polygon, arrow keys move it, [ and ] rotate it, Delete removes it."
+  [style.width.px]="box().width"
+  [style.height.px]="box().height"
+  [style.cursor]="cursor()"
+  (pointerdown)="onPointerDown($event)"
+  (pointermove)="onPointerMove($event)"
+  (pointerup)="onPointerUp($event)"
+  (pointercancel)="onPointerCancel()"
+  (keydown)="onKeydown($event)"
+></canvas>
+
+<div class="tools" role="toolbar" aria-label="Polygon tools">
+  <button mat-stroked-button type="button" [disabled]="!hasSelection()" (click)="deleteSelected()">
+    Delete selected
+  </button>
+  <button mat-stroked-button type="button" [disabled]="!hasPolygons()" (click)="clearAll()">
+    Clear all
+  </button>
+</div>
