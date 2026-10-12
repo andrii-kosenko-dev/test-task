@@ -4,8 +4,8 @@
 
 ```
  SearchBar ──queryChanged──▶ ProductsEffects ──searchRequested──▶ ProductsApi
-    ▲  (typing only)           (debounce 200ms,                   (fixture today,
-    │                           normalize, dedupe)                 HTTP later)
+    ▲  (typing only)           (debounce 200ms,                   (HTTP backend,
+    │                           normalize, dedupe)                 fixture in tests)
     │                                 │                                │
  SuggestionsService                   ▼                                ▼
   ▲        ▲                    products store ◀──searchSucceeded── switchMap
@@ -21,7 +21,7 @@
 | Path | Responsibility |
 |------|----------------|
 | `core/models` | `Product`, `ProductPage` types |
-| `core/api` | `ProductsApi` (abstract, DI token) and `FixtureProductsApi` (lazy-loaded JSON, simulated latency and paging) |
+| `core/api` | `ProductsApi` (abstract, DI token), `HttpProductsApi` (production, talks to `/api`) and `FixtureProductsApi` (test double: lazy-loaded JSON, simulated latency and paging) |
 | `core/data` | `products.fixture.json`: 194 DummyJSON products |
 | `core/search` | Pure `normalize` / `tokenize` and `scoreProduct` / `rankProducts` |
 | `core/suggest` | Pure `buildTermIndex` and `suggest` (typeahead) |
