@@ -39,7 +39,12 @@ describe('ProductDialog', () => {
     await fixture.whenStable();
   };
 
-  beforeEach(() => close.mockClear());
+  beforeEach(() => {
+    close.mockClear();
+    // jsdom has no canvas implementation; the drawing itself is covered in polygon-canvas.spec.ts.
+    vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
+  });
+  afterEach(() => vi.restoreAllMocks());
 
   it('shows title, description and the large image', async () => {
     await create();

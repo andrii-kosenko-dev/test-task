@@ -37,7 +37,7 @@ describe('PolygonCanvas', () => {
   const el = () => fixture.nativeElement as HTMLElement;
   const canvas = () => el().querySelector('canvas')!;
   const button = (name: string) =>
-    [...el().querySelectorAll('button')].find((b) => b.textContent?.includes(name))!;
+    [...el().querySelectorAll('button')].find((b) => b.getAttribute('aria-label')?.includes(name))!;
 
   const pointer = (type: string, x: number, y: number) =>
     canvas().dispatchEvent(

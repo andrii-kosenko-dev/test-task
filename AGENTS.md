@@ -4,7 +4,7 @@ Guidance for AI coding agents working in this repository. Keep it accurate: upda
 
 ## What this is
 
-A single-page product search app (Angular + NgRx). Real-time search with typeahead, a virtualized card list loaded in batches, a product detail dialog, and dark/light themes (dark by default, toggle top right). Mobile-first and responsive.
+A single-page product search app (Angular + NgRx). Real-time search with typeahead, a virtualized card list loaded in batches, a product detail dialog where users can draw, move and rotate polygons on the image (canvas, persisted), and dark/light themes (dark by default, toggle top right). Mobile-first and responsive.
 
 The backend does not exist yet. Data comes from a hardcoded DummyJSON fixture behind the `ProductsApi` interface (see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)).
 
@@ -49,4 +49,7 @@ Angular 22 (standalone components, signals, new control flow, OnPush, no SSR, no
 - `FixtureProductsApi` loads the JSON with a dynamic `import()` so it ships as its own chunk. Keep it lazy.
 - Effects use `debounceTime` on the real async scheduler. Tests that cover them use `vi.useFakeTimers()`.
 - `QueriesEffects` records a query only when it is the first page, has at least 2 characters and has results. The queries reducer then collapses prefix chains and evicts the least recently used entry beyond 50.
+- Polygons are stored in image units (1 = image width, y up to 1/aspect), so they scale with the picture and rotation stays rigid. Rotation is baked into the points; there is no angle field. Gesture logic lives in the framework-free `PolygonEditor`; `PolygonCanvas` is only the shell.
+- Canvas cannot read `light-dark()` custom properties, so `PolygonCanvas` reads resolved colors from the computed `color` / `border-top-color` of the canvas element. jsdom has no canvas: specs stub `getContext`, `getBoundingClientRect` and `ResizeObserver`.
+- `app.integration.spec.ts` run alone fails its first test (cold lazy fixture import). It passes in the full suite; this predates the drawing feature.
 - `mat.theme` uses `color-scheme` with `light-dark()`. `ThemeService` sets `color-scheme` on `<html>` and toggles `dark-theme` / `light-theme` classes.

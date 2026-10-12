@@ -13,10 +13,30 @@
 ></canvas>
 
 <div class="tools" role="toolbar" aria-label="Polygon tools">
-  <button mat-stroked-button type="button" [disabled]="!hasSelection()" (click)="deleteSelected()">
-    Delete selected
+  <button
+    mat-icon-button
+    type="button"
+    aria-label="Delete selected polygon"
+    title="Delete selected polygon"
+    [disabled]="!hasSelection()"
+    (click)="deleteSelected()"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path d="M6 19a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V7H6v12ZM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4Z" />
+    </svg>
   </button>
-  <button mat-stroked-button type="button" [disabled]="!hasPolygons()" (click)="clearAll()">
-    Clear all
+  <button
+    mat-icon-button
+    type="button"
+    aria-label="Clear all polygons"
+    title="Clear all polygons"
+    [disabled]="!hasPolygons()"
+    (click)="clearAll()"
+  >
+    <svg viewBox="0 0 24 24" aria-hidden="true">
+      <path
+        d="M15 16h4v2h-4v-2Zm0-8h7v2h-7V8Zm0 4h6v2h-6v-2ZM3 18a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V8H3v10ZM14 5h-3l-1-1H6L5 5H2v2h12V5Z"
+      />
+    </svg>
   </button>
 </div>

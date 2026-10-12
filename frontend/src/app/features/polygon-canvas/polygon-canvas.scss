@@ -31,7 +31,13 @@ canvas {
   pointer-events: auto;
 
   button {
-    min-height: 2.75rem;
     background: var(--mat-sys-surface-container-highest);
+    border-radius: 50%;
+
+    svg {
+      width: 1.5rem;
+      height: 1.5rem;
+      fill: currentColor;
+    }
   }
 }

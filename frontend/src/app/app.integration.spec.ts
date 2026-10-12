@@ -188,7 +188,7 @@ describe('App (integration)', () => {
 
       const clearAll = () =>
         [...document.querySelectorAll<HTMLButtonElement>('app-polygon-canvas button')].find((b) =>
-          b.textContent?.includes('Clear'),
+          b.getAttribute('aria-label')?.includes('Clear'),
         )!;
       expect(clearAll().disabled).toBe(false);
 

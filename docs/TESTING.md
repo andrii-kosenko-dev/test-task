@@ -24,10 +24,11 @@ npx ng test --watch=false --filter='debounce'              # by test name
 | Layer | What is covered | Tools |
 |-------|-----------------|-------|
 | Pure logic (`core/search`, `core/suggest`) | Ranking order, partial words, AND semantics, diacritics, stability, suggestion ranking, history word breakdown | Plain Vitest, table tests |
+| Drawing (`core/drawing`) | Geometry, and the `PolygonEditor` gestures with plain coordinates (no DOM) | Plain Vitest |
 | Fixture and API | Schema and unique ids, paging boundaries, latency | `vi.useFakeTimers` |
 | Store | Reducers, selectors, effects (debounce, `switchMap` cancellation, ignored `loadNextPage`, error handling, history recording rules) | `provideMockActions`, `provideMockStore`, fake timers |
 | Components | Rendering, events, accessibility attributes, fallbacks | TestBed, Material harnesses (`MatAutocompleteHarness`) |
-| Integration (`app.integration.spec.ts`) | The real store, effects, fixture API and components together: load, search by typing, partial words, empty and recovery, debounce, query history, suggestions, dialog, theme | Fake timers, latency set to 0 |
+| Integration (`app.integration.spec.ts`) | The real store, effects, fixture API and components together: load, search by typing, partial words, empty and recovery, debounce, query history, suggestions, dialog, polygons surviving close and reopen, theme | Fake timers, latency set to 0 |
 
 ## Regression policy
 

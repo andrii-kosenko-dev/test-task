@@ -12,7 +12,7 @@ import {
   signal,
   viewChild,
 } from '@angular/core';
-import { MatButton } from '@angular/material/button';
+import { MatIconButton } from '@angular/material/button';
 import { ThemeService } from '../../core/theme/theme.service';
 import type { Point } from '../../core/drawing/geometry';
 import { PolygonEditor } from '../../core/drawing/polygon-editor';
@@ -35,7 +35,7 @@ interface Palette {
  */
 @Component({
   selector: 'app-polygon-canvas',
-  imports: [MatButton],
+  imports: [MatIconButton],
   templateUrl: './polygon-canvas.html',
   styleUrl: './polygon-canvas.scss',
   changeDetection: ChangeDetectionStrategy.OnPush,

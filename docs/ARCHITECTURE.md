@@ -25,13 +25,16 @@
 | `core/data` | `products.fixture.json`: 194 DummyJSON products |
 | `core/search` | Pure `normalize` / `tokenize` and `scoreProduct` / `rankProducts` |
 | `core/suggest` | Pure `buildTermIndex` and `suggest` (typeahead) |
+| `core/drawing` | Pure polygon `geometry`, the framework-free `PolygonEditor` (draw, select, move, rotate) and the `Polygon` model |
 | `core/theme` | `ThemeService`: signal, localStorage, `<html>` class and `color-scheme` |
 | `store/products` | Search results, paging, loading and error state, plus the effects |
+| `store/drawings` | Polygons per image (`drawingKey` = product id + image URL), the effects that load and save them, and the `DrawingsStorage` seam (localStorage today) |
 | `store/queries` | Entity-adapter store of remembered searches, plus the recording effect |
 | `features/search` | `SearchBar` (Material autocomplete) and `SuggestionsService` |
 | `features/product-list` | Virtualized grid, batch loading, skeleton, empty and error states |
 | `features/product-card` | Clickable card with thumbnail |
 | `features/product-dialog` | Detail dialog (gallery) and `ProductDialogService` (full-screen on mobile) |
+| `features/polygon-canvas` | Canvas overlay: pointer and keyboard wiring, drawing, toolbar (delete selected, clear all) |
 | `features/search-page` | The single route; dispatches the initial listing |
 | `layout/header` | Title and top-right theme toggle |
 | `testing` | Shared test factories |
@@ -63,6 +66,14 @@ A contiguous phrase match in the title adds 25. Results are sorted by score, the
   - removes stored prefixes when a longer query arrives (`iph` → `iphone` keeps only `iphone`);
   - evicts the least recently used entry beyond 50.
 - `suggest()` returns past queries first, then completions of the last typed word from product-title terms. A history match is a prefix of the whole query or a word breakdown, where every typed word prefix-matches a different word of the past query, in any order. History ranks by match kind, then hits, then recency.
+
+## Polygon drawing
+
+- The dialog shows a `PolygonCanvas` over the hero image once it has loaded (`aspect` = natural width ÷ height). The canvas is fitted to the letterboxed image and follows size changes through a `ResizeObserver`.
+- Coordinates are in image units: 1 is the image width, so the image spans x ∈ [0, 1] and y ∈ [0, 1/aspect]. The same unit on both axes keeps shapes rigid; pixels are `unit × canvas width`. Resizing the window therefore keeps every polygon at the same place and size relative to the picture.
+- Press on empty space and drag to draw freehand; the path is closed and reduced with Ramer–Douglas–Peucker. Press on a polygon and drag to move it (clamped to the image). Drag the round handle above a selected polygon to rotate it about its centroid. Keyboard on the focused canvas: Enter selects the next polygon, arrows move, `[` / `]` rotate, Delete removes.
+- Each gesture ends with one `polygonsChanged({ key, polygons })`. The reducer keeps polygons per `drawingKey`, and `DrawingsEffects` writes the whole map through `DrawingsStorage` (localStorage) and reloads it on startup. Polygons are per gallery image.
+- To persist on a backend, implement `DrawingsStorage` (or replace the effects) and change the provider in `app.config.ts`.
 
 ## Swapping in the real backend
 
