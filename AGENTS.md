@@ -6,11 +6,12 @@ Guidance for AI coding agents working in this repository. Keep it accurate: upda
 
 A single-page product search app (Angular + NgRx). Real-time search with typeahead, a virtualized card list loaded in batches, a product detail dialog where users can draw, move and rotate one polygon per image (canvas, persisted), and dark/light themes (dark by default, toggle top right). Mobile-first and responsive.
 
-The backend does not exist yet. Data comes from a hardcoded DummyJSON fixture behind the `ProductsApi` interface (see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)).
+Data comes from the backend over HTTP (`HttpProductsApi`, `/api/*`). The in-memory DummyJSON fixture (`FixtureProductsApi`) is kept only as a test double (see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)).
 
-- `frontend/` is the Angular app. All commands below run from there.
-- `backend/` is empty and reserved.
-- `docs/PLAN.md` is the original implementation plan and task list (T0–T13).
+- `frontend/` is the Angular app. All commands in the table below run from there.
+- `backend/` is the NestJS monorepo plus the Go report service; see [docs/BACKEND.md](docs/BACKEND.md) for its commands, layout and rules.
+- `docker-compose.yml` runs everything (Mongo, Redis Stack, 3 services, frontend). `scripts/smoke.sh` checks it end to end.
+- `docs/PLAN.md` is the original frontend plan (T0–T13); `docs/BACKEND_PLAN.md` the backend plan.
 
 ## Commands (run in `frontend/`)
 
@@ -35,7 +36,7 @@ Angular 22 (standalone components, signals, new control flow, OnPush, no SSR, no
 
 1. **TDD.** Write the failing test first, see it fail, implement, see it pass. Run the tests as soon as they exist.
 2. **Commit after each coherent change**, using conventional commits (`feat:`, `fix:`, `test:`, `docs:`, `chore:`).
-3. **Keep `ProductsApi` the only data seam.** Components and the store never import the fixture or call HTTP directly.
+3. **Keep `ProductsApi` the only data seam.** Components and the store never import the fixture or call HTTP directly. Specs that need data provide `FixtureProductsApi` explicitly.
 4. **Search logic stays pure** (`core/search`, `core/suggest`): no Angular or store imports, so it is trivially testable.
 5. **Mobile-first CSS.** Base styles target the smallest viewport; enhance with `min-width` media queries. Touch targets are at least 44px.
 6. **Theme via Material system tokens** (`var(--mat-sys-*)`). Never hardcode colors; both themes must work.
