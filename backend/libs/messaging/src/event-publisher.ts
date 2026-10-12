@@ -2,10 +2,8 @@ import { Inject, Injectable } from '@nestjs/common';
 import type { ClientProxy } from '@nestjs/microservices';
 import { firstValueFrom } from 'rxjs';
 import { type AppEvent, createEvent, EVENT_PATTERN, type EventPayload, type EventType } from '@app/common';
-import type { TimeSeriesService } from '@app/redis';
+import { TimeSeriesService } from '@app/redis';
 import { EVENTS_CLIENT, SERVICE_NAME } from './messaging.constants';
-
-type Recorder = Pick<TimeSeriesService, 'recordEvent'>;
 
 /**
  * Publishes an API action to every sink: the Redis transporter (for subscribers such as
@@ -16,7 +14,7 @@ export class EventPublisher {
 
   constructor(
     @Inject(EVENTS_CLIENT) private readonly client: ClientProxy,
-    private readonly timeSeries: Recorder,
+    private readonly timeSeries: TimeSeriesService,
     @Inject(SERVICE_NAME) private readonly service: string,
   ) {}
 
