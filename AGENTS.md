@@ -4,7 +4,7 @@ Guidance for AI coding agents working in this repository. Keep it accurate: upda
 
 ## What this is
 
-A single-page product search app (Angular + NgRx). Real-time search with typeahead, a virtualized card list loaded in batches, a product detail dialog where users can draw, move and rotate polygons on the image (canvas, persisted), and dark/light themes (dark by default, toggle top right). Mobile-first and responsive.
+A single-page product search app (Angular + NgRx). Real-time search with typeahead, a virtualized card list loaded in batches, a product detail dialog where users can draw, move and rotate one polygon per image (canvas, persisted), and dark/light themes (dark by default, toggle top right). Mobile-first and responsive.
 
 The backend does not exist yet. Data comes from a hardcoded DummyJSON fixture behind the `ProductsApi` interface (see [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)).
 

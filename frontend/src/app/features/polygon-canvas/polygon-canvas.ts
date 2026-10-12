@@ -72,10 +72,6 @@ export class PolygonCanvas {
     this.version();
     return this.editor().selectedId !== null;
   });
-  protected readonly hasPolygons = computed(() => {
-    this.version();
-    return this.editor().polygons.length > 0;
-  });
 
   constructor() {
     // Adopt polygons that changed outside (another image, a store update from elsewhere).
@@ -187,10 +183,6 @@ export class PolygonCanvas {
 
   protected deleteSelected(): void {
     this.commit(this.editor().deleteSelected());
-  }
-
-  protected clearAll(): void {
-    this.commit(this.editor().clear());
   }
 
   private commit(changed: boolean): void {

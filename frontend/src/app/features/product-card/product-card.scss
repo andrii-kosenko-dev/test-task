@@ -19,14 +19,12 @@
   border-radius: var(--mat-sys-corner-large);
   cursor: pointer;
   transition:
-    transform 160ms ease,
     box-shadow 160ms ease,
     border-color 160ms ease;
 
   &:hover {
     border-color: var(--mat-sys-primary);
     box-shadow: var(--mat-sys-level2);
-    transform: translateY(-2px);
   }
 
   &:focus-visible {

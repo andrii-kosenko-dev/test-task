@@ -34,7 +34,7 @@
 | `features/product-list` | Virtualized grid, batch loading, skeleton, empty and error states |
 | `features/product-card` | Clickable card with thumbnail |
 | `features/product-dialog` | Detail dialog (gallery) and `ProductDialogService` (full-screen on mobile) |
-| `features/polygon-canvas` | Canvas overlay: pointer and keyboard wiring, drawing, toolbar (delete selected, clear all) |
+| `features/polygon-canvas` | Canvas overlay: pointer and keyboard wiring, drawing, delete-selected button |
 | `features/search-page` | The single route; dispatches the initial listing |
 | `layout/header` | Title and top-right theme toggle |
 | `testing` | Shared test factories |
@@ -71,8 +71,8 @@ A contiguous phrase match in the title adds 25. Results are sorted by score, the
 
 - The dialog shows a `PolygonCanvas` over the hero image once it has loaded (`aspect` = natural width ÷ height). The canvas is fitted to the letterboxed image and follows size changes through a `ResizeObserver`.
 - Coordinates are in image units: 1 is the image width, so the image spans x ∈ [0, 1] and y ∈ [0, 1/aspect]. The same unit on both axes keeps shapes rigid; pixels are `unit × canvas width`. Resizing the window therefore keeps every polygon at the same place and size relative to the picture.
-- Press on empty space and drag to draw freehand; the path is closed and reduced with Ramer–Douglas–Peucker. Press on a polygon and drag to move it (clamped to the image). Drag the round handle above a selected polygon to rotate it about its centroid. Keyboard on the focused canvas: Enter selects the next polygon, arrows move, `[` / `]` rotate, Delete removes.
-- Each gesture ends with one `polygonsChanged({ key, polygons })`. The reducer keeps polygons per `drawingKey`, and `DrawingsEffects` writes the whole map through `DrawingsStorage` (localStorage) and reloads it on startup. Polygons are per gallery image.
+- Each image holds at most one polygon: drawing is ignored while one exists, and deleting it allows a new one. Press on empty space and drag to draw freehand; the path is closed and reduced with Ramer–Douglas–Peucker. Press on a polygon and drag to move it (clamped to the image). Drag the round handle above a selected polygon to rotate it about its centroid. Keyboard on the focused canvas: Enter selects the next polygon, arrows move, `[` / `]` rotate, Delete removes.
+- Each gesture ends with one `polygonsChanged({ key, polygons })`. The reducer keeps polygons per `drawingKey`, and `DrawingsEffects` writes the whole map through `DrawingsStorage` (localStorage) and reloads it on startup. Polygons are per gallery image, one each.
 - To persist on a backend, implement `DrawingsStorage` (or replace the effects) and change the provider in `app.config.ts`.
 
 ## Swapping in the real backend

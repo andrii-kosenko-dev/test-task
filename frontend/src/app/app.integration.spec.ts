@@ -186,18 +186,11 @@ describe('App (integration)', () => {
       pointer(canvas, 'pointerup', 100, 100);
       await settle(10);
 
-      const clearAll = () =>
-        [...document.querySelectorAll<HTMLButtonElement>('app-polygon-canvas button')].find((b) =>
-          b.getAttribute('aria-label')?.includes('Clear'),
-        )!;
-      expect(clearAll().disabled).toBe(false);
-
       await closeDialog();
       expect(document.querySelector('app-product-dialog')).toBeNull();
 
       dialog = await openFirstCard();
       expect(dialog.querySelector('canvas')).not.toBeNull();
-      expect(clearAll().disabled).toBe(false);
 
       const saved = JSON.parse(localStorage.getItem(DRAWINGS_STORAGE_KEY)!) as Record<
         string,

@@ -145,21 +145,20 @@ describe('PolygonEditor', () => {
       expect(editor.pointerUp()).toBe(false);
     });
 
-    it('picks the topmost polygon when they overlap', () => {
-      const editor = make();
-      draw(editor, squarePath(0.2, 0.2, 0.3));
-      draw(editor, squarePath(0.1, 0.1, 0.3)); // starts outside the first one
-      editor.pointerDown({ x: 0.9, y: 0.7 });
-      editor.pointerUp();
-      editor.pointerDown({ x: 0.35, y: 0.35 }); // inside both
-      editor.pointerUp();
-      expect(editor.selectedId).toBe('p2');
+    it('allows only one polygon per image: further drags on empty space draw nothing', () => {
+      const editor = drawn();
+      expect(draw(editor, squarePath(0.6, 0.4, 0.2))).toBe(false);
+      expect(editor.polygons).toHaveLength(1);
+      expect(editor.draft).toEqual([]);
     });
 
-    it('draws a new polygon when dragging from empty space even if one is selected', () => {
+    it('allows drawing again once the polygon has been deleted', () => {
       const editor = drawn();
-      draw(editor, squarePath(0.6, 0.4, 0.2));
-      expect(editor.polygons).toHaveLength(2);
+      editor.pointerDown({ x: 0.35, y: 0.35 });
+      editor.pointerUp();
+      editor.deleteSelected();
+      expect(draw(editor, squarePath(0.6, 0.4, 0.2))).toBe(true);
+      expect(editor.polygons).toHaveLength(1);
     });
   });
 
@@ -236,15 +235,6 @@ describe('PolygonEditor', () => {
       expect(editor.deleteSelected()).toBe(false);
     });
 
-    it('clears all polygons', () => {
-      const editor = make();
-      draw(editor, squarePath(0.2, 0.2, 0.3));
-      draw(editor, squarePath(0.6, 0.3, 0.2));
-      expect(editor.clear()).toBe(true);
-      expect(editor.polygons).toEqual([]);
-      expect(editor.clear()).toBe(false);
-    });
-
     it('nudges and rotates the selected polygon', () => {
       const editor = make();
       draw(editor, squarePath(0.2, 0.2, 0.3));
@@ -256,15 +246,14 @@ describe('PolygonEditor', () => {
       expect(editor.polygons[0].points[0]).not.toEqual(first);
     });
 
-    it('cycles the selection', () => {
+    it('selects the polygon', () => {
       const editor = make();
       draw(editor, squarePath(0.2, 0.2, 0.2));
-      draw(editor, squarePath(0.6, 0.3, 0.2));
-      expect(editor.selectedId).toBe('p2');
+      editor.pointerDown({ x: 0.9, y: 0.7 });
+      editor.pointerUp();
+      expect(editor.selectedId).toBeNull();
       editor.selectNext();
       expect(editor.selectedId).toBe('p1');
-      editor.selectNext();
-      expect(editor.selectedId).toBe('p2');
     });
   });
 

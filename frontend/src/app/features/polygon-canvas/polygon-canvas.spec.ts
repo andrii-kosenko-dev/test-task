@@ -215,44 +215,47 @@ describe('PolygonCanvas', () => {
   });
 
   describe('toolbar and keyboard', () => {
-    it('disables delete until something is selected and clear until something exists', async () => {
+    it('has no clear-all button, only delete', async () => {
       await create();
+      expect(el().querySelectorAll('.tools button')).toHaveLength(1);
+      expect(button('Clear')).toBeUndefined();
+    });
+
+    it('disables delete until the polygon is selected', async () => {
+      await create([square('a', 0.2, 0.2, 0.2)]);
       expect(button('Delete').disabled).toBe(true);
-      expect(button('Clear').disabled).toBe(true);
-      host.polygons.set([square('a', 0.2, 0.2, 0.2)]);
+      drag([180, 180], []); // 0.2×600 = 120..240px
       await fixture.whenStable();
-      expect(button('Clear').disabled).toBe(false);
-      expect(button('Delete').disabled).toBe(true);
+      expect(button('Delete').disabled).toBe(false);
     });
 
     it('deletes the selected polygon', async () => {
-      await create([square('a', 0.2, 0.2, 0.2), square('b', 0.6, 0.5, 0.2)]);
+      await create([square('a', 0.2, 0.2, 0.2)]);
       drag([180, 180], []);
       await fixture.whenStable();
       button('Delete').click();
       await fixture.whenStable();
-      expect(host.changes.at(-1)!.map((p) => p.id)).toEqual(['b']);
-    });
-
-    it('clears all polygons', async () => {
-      await create([square('a', 0.2, 0.2, 0.2), square('b', 0.6, 0.5, 0.2)]);
-      button('Clear').click();
-      await fixture.whenStable();
       expect(host.changes.at(-1)).toEqual([]);
     });
 
+    it('does not draw a second polygon', async () => {
+      await create([square('a', 0.2, 0.2, 0.2)]);
+      drag([400, 250], outline(400, 250, 100).slice(1));
+      expect(host.changes).toEqual([]);
+    });
+
     it('supports Delete, arrows, rotation and Enter from the keyboard', async () => {
-      await create([square('a', 0.2, 0.2, 0.2), square('b', 0.6, 0.5, 0.2)]);
+      await create([square('a', 0.2, 0.2, 0.2)]);
       const key = (k: string, init: KeyboardEventInit = {}) =>
         canvas().dispatchEvent(new KeyboardEvent('keydown', { key: k, bubbles: true, ...init }));
 
-      key('Enter'); // selects the first polygon
+      key('Enter'); // selects the polygon
       key('ArrowRight');
       expect(host.changes.at(-1)![0].points[0].x).toBeCloseTo(0.2 + 0.01);
       key(']');
       expect(host.changes).toHaveLength(2);
       key('Delete');
-      expect(host.changes.at(-1)!.map((p) => p.id)).toEqual(['b']);
+      expect(host.changes.at(-1)).toEqual([]);
     });
   });
 
@@ -263,7 +266,6 @@ describe('PolygonCanvas', () => {
       host.polygons.set([]);
       await fixture.whenStable();
       expect(ctx['fill']).not.toHaveBeenCalled();
-      expect(button('Clear').disabled).toBe(true);
     });
   });
 });

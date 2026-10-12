@@ -122,7 +122,8 @@ export class PolygonEditor {
       };
     } else {
       this.selectedId = null;
-      this.gesture = { kind: 'draw', path: [this.clamp(p)] };
+      // One polygon per image: drawing is only possible while there is none.
+      this.gesture = this.polygons.length === 0 ? { kind: 'draw', path: [this.clamp(p)] } : null;
     }
   }
 
@@ -174,13 +175,6 @@ export class PolygonEditor {
   deleteSelected(): boolean {
     if (!this.selectedId) return false;
     this.polygons = this.polygons.filter((p) => p.id !== this.selectedId);
-    this.selectedId = null;
-    return true;
-  }
-
-  clear(): boolean {
-    if (this.polygons.length === 0) return false;
-    this.polygons = [];
     this.selectedId = null;
     return true;
   }
