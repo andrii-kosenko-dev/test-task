@@ -8,6 +8,8 @@ import { pick } from 'stream-json/filters/Pick.js';
 import { streamArray } from 'stream-json/streamers/StreamArray.js';
 import type { Product } from '../products/product.model';
 
+const BOM = 0xfeff;
+
 export type FileFormat = 'json' | 'xlsx';
 
 export const PRODUCT_COLUMNS = ['id', 'title', 'description', 'category', 'brand', 'price', 'thumbnail', 'images'] as const;
@@ -43,7 +45,8 @@ async function firstNonSpaceChar(file: string): Promise<string> {
   try {
     const buffer = Buffer.alloc(512);
     const { bytesRead } = await handle.read(buffer, 0, 512, 0);
-    return buffer.toString('utf8', 0, bytesRead).replace(/^﻿/, '').trimStart().charAt(0);
+    const text = buffer.toString('utf8', 0, bytesRead);
+    return (text.charCodeAt(0) === BOM ? text.slice(1) : text).trimStart().charAt(0);
   } finally {
     await handle.close();
   }
