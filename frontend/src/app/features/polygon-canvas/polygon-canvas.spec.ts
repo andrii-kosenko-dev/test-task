@@ -110,8 +110,8 @@ describe('PolygonCanvas', () => {
         constructor(cb: () => void) {
           resize = cb;
         }
-        observe() {}
-        disconnect() {}
+        observe = vi.fn();
+        disconnect = vi.fn();
       },
     );
   });

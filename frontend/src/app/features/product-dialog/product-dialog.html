@@ -26,10 +26,23 @@
             class="hero"
             [src]="current()"
             [alt]="product.title"
-            (error)="imageFailed.set(true)"
+            (load)="onImageLoad(hero)"
+            (error)="onImageError()"
+            #hero
           />
+          @if (aspect(); as aspect) {
+            <app-polygon-canvas
+              [aspect]="aspect"
+              [polygons]="polygons()"
+              (polygonsChange)="savePolygons($event)"
+            />
+          }
         }
       </div>
+
+      @if (aspect()) {
+        <p class="draw-hint">Drag on the image to outline an area. Drag a shape to move it.</p>
+      }
 
       @if (images.length > 1) {
         <div class="gallery" role="group" aria-label="Product images">

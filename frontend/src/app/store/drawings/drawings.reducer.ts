@@ -1,4 +1,4 @@
-import { createFeature, createReducer, createSelector, on } from '@ngrx/store';
+import { createFeature, createReducer, on } from '@ngrx/store';
 import type { Polygon } from '../../core/drawing/polygon.model';
 import { DrawingsActions } from './drawings.actions';
 
@@ -19,11 +19,9 @@ export const drawingsFeature = createFeature({
     on(DrawingsActions.loaded, (_, { byImage }): DrawingsState => ({ byImage })),
     on(DrawingsActions.polygonsChanged, (state, { key, polygons }): DrawingsState => {
       if (polygons.length > 0) return { byImage: { ...state.byImage, [key]: polygons } };
-      const { [key]: _removed, ...rest } = state.byImage;
-      return { byImage: rest };
+      return {
+        byImage: Object.fromEntries(Object.entries(state.byImage).filter(([k]) => k !== key)),
+      };
     }),
   ),
 });
-
-export const selectPolygonsFor = (key: string) =>
-  createSelector(drawingsFeature.selectByImage, (byImage) => byImage[key] ?? []);

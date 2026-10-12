@@ -50,6 +50,12 @@
   }
 }
 
+.draw-hint {
+  margin: 0.5rem 0 0;
+  font: var(--mat-sys-body-small);
+  color: var(--mat-sys-on-surface-variant);
+}
+
 .placeholder svg {
   width: 3.5rem;
   height: 3.5rem;

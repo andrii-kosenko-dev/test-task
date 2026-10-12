@@ -6,6 +6,7 @@ import { PRODUCTS_API_LATENCY_MS } from './core/api/fixture-products-api';
 import { App } from './app';
 import { appConfig } from './app.config';
 import { SEARCH_DEBOUNCE_MS } from './store/products/products.effects';
+import { DRAWINGS_STORAGE_KEY } from './store/drawings/drawings.storage';
 import { queriesFeature } from './store/queries/queries.reducer';
 
 /**
@@ -125,6 +126,85 @@ describe('App (integration)', () => {
     expect(dialog.querySelector('h2')?.textContent).toContain(title);
     expect(dialog.querySelector('.description')?.textContent?.trim()).not.toBe('');
     expect(dialog.querySelector('img.hero')?.getAttribute('src')).toMatch(/^https:/);
+  });
+
+  describe('polygon drawing', () => {
+    const openFirstCard = async () => {
+      el().querySelector<HTMLButtonElement>('app-product-card button')!.click();
+      await settle(50);
+      const dialog = document.querySelector('app-product-dialog')!;
+      const img = dialog.querySelector<HTMLImageElement>('img.hero')!;
+      Object.defineProperty(img, 'naturalWidth', { value: 600, configurable: true });
+      Object.defineProperty(img, 'naturalHeight', { value: 400, configurable: true });
+      img.dispatchEvent(new Event('load'));
+      await settle(10);
+      return dialog;
+    };
+    const closeDialog = async () => {
+      document.querySelector<HTMLButtonElement>('app-product-dialog button.close')!.click();
+      await settle(300);
+    };
+    const pointer = (canvas: Element, type: string, x: number, y: number) =>
+      canvas.dispatchEvent(
+        new MouseEvent(type, { clientX: x, clientY: y, bubbles: true, button: 0 }),
+      );
+
+    beforeEach(() => {
+      vi.spyOn(HTMLCanvasElement.prototype, 'getContext').mockReturnValue(null);
+      vi.spyOn(HTMLElement.prototype, 'getBoundingClientRect').mockReturnValue({
+        left: 0,
+        top: 0,
+        right: 600,
+        bottom: 400,
+        x: 0,
+        y: 0,
+        width: 600,
+        height: 400,
+      } as DOMRect);
+    });
+    afterEach(() => vi.restoreAllMocks());
+
+    it('keeps drawn polygons when the dialog is closed and reopened, and across reloads', async () => {
+      let dialog = await openFirstCard();
+      const canvas = dialog.querySelector('canvas')!;
+      expect(canvas).not.toBeNull();
+
+      // A freehand square outline in canvas pixels, ending back at its start.
+      const outline = [
+        [100, 100],
+        [200, 100],
+        [300, 100],
+        [300, 200],
+        [300, 300],
+        [200, 300],
+        [100, 300],
+        [100, 200],
+        [100, 100],
+      ];
+      pointer(canvas, 'pointerdown', ...(outline[0] as [number, number]));
+      for (const [x, y] of outline.slice(1)) pointer(canvas, 'pointermove', x, y);
+      pointer(canvas, 'pointerup', 100, 100);
+      await settle(10);
+
+      const clearAll = () =>
+        [...document.querySelectorAll<HTMLButtonElement>('app-polygon-canvas button')].find((b) =>
+          b.textContent?.includes('Clear'),
+        )!;
+      expect(clearAll().disabled).toBe(false);
+
+      await closeDialog();
+      expect(document.querySelector('app-product-dialog')).toBeNull();
+
+      dialog = await openFirstCard();
+      expect(dialog.querySelector('canvas')).not.toBeNull();
+      expect(clearAll().disabled).toBe(false);
+
+      const saved = JSON.parse(localStorage.getItem(DRAWINGS_STORAGE_KEY)!) as Record<
+        string,
+        unknown[]
+      >;
+      expect(Object.values(saved)[0]).toHaveLength(1);
+    });
   });
 
   it('toggles the theme from the header', async () => {
