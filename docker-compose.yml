@@ -49,7 +49,7 @@ services:
     volumes: [exports:/data/exports]
     user: root # the named volume is created root-owned
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3001/health"]
       interval: 10s
       timeout: 5s
       retries: 10
@@ -70,7 +70,7 @@ services:
       REPORT_PROTO_PATH: /app/proto/report.proto
     ports: ["3002:3002"]
     healthcheck:
-      test: ["CMD", "wget", "-qO-", "http://localhost:3002/health"]
+      test: ["CMD", "wget", "-qO-", "http://127.0.0.1:3002/health"]
       interval: 10s
       timeout: 5s
       retries: 10
